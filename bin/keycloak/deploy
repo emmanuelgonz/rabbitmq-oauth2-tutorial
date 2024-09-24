@@ -11,6 +11,7 @@ echo "Running keycloack docker image ..."
 
 docker run \
 		--detach \
+		--restart=always \
 		--name keycloak --net rabbitmq_net \
 		--publish 8080:8080 \
         --publish 8443:8443 \
