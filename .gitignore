@@ -5,6 +5,7 @@ conf/symmetric_key/uaa.yml
 conf/entra/certs
 bin/tls-gen
 tls-gen
+conf/keycloak/certs_private
 !conf/azure/rabbitmq.config
 plugin
 rabbitmq-auth-backend-oauth2-*
