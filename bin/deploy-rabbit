@@ -44,7 +44,7 @@ function deploy {
     cp $CERTS_DIR/basic/testca/cacert.pem $CERTS_DIR
     cp $CERTS_DIR/basic/server_localhost/key.pem $CERTS_DIR
     cp $CERTS_DIR/basic/server_localhost/cert.pem $CERTS_DIR
-    EXTRA_PORTS="-p 15671:15671 "
+    EXTRA_PORTS="-p 15671:15671 -p 5671:5671 "
   fi
   EXTRA_MOUNTS="-v ${SCRIPT}/../conf/enabled_plugins:/etc/rabbitmq/enabled_plugins "
   EXTRA_MOUNTS="${EXTRA_MOUNTS} -v ${CONF_DIR}:/conf "
