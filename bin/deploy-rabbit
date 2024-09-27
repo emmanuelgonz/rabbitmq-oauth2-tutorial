@@ -77,10 +77,10 @@ function deploy {
   docker run -d --restart=always --name rabbitmq_tcp_relay \
 	  -p 15670:15670 --net rabbitmq_net -v ${CONF_DIR}:/conf \
 	  cloudamqp/websocket-tcp-relay \
-	  --upstream=tls://127.0.0.1:5671 \
-	  --bind=127.0.0.1 \
-	  --tls-cert=/conf/certs_private/basic/server_localhost/cert.pem \
-	  --tls-key=/conf/certs_private/basic/server_localhost/key.pem
+	  --upstream=tcp://rabbitmq:5672 \
+	  --bind=0.0.0.0 
+	  #--tls-cert=/conf/certs_private/basic/server_localhost/cert.pem \
+	  #--tls-key=/conf/certs_private/basic/server_localhost/key.pem
 }
 
 deploy

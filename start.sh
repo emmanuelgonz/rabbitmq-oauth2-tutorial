@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Start Keycloak
-sudo make start-keycloak
+#sudo make start-keycloak
 
 # Start RabbitMQ
 export MODE=keycloak
