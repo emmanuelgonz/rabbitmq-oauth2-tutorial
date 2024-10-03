@@ -73,6 +73,6 @@ services:
 
 networks:
   rabbitmq_net:
-    # name: rabbitmq_net
+    name: rabbitmq_net
     # external: true
     driver: bridge
