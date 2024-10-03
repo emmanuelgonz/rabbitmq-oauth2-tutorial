@@ -64,7 +64,7 @@ function deploy {
   docker network inspect rabbitmq_net >/dev/null 2>&1 || docker network create rabbitmq_net
   docker rm -f rabbitmq 2>/dev/null || echo "rabbitmq was not running"
   echo "running RabbitMQ ($IMAGE:$IMAGE_TAG) with Idp $MODE and configuration file(s) $USED_CONFIG"
-  echo ${EXTRA_PORTS}
+  echo ${EXTRA_MOUNTS}
   docker run -d --restart=always --name rabbitmq \
       --net rabbitmq_net \
       -p 15672:15672 \
@@ -75,12 +75,12 @@ function deploy {
       ${IMAGE}:${IMAGE_TAG}
 
   docker run -d --restart=always --name rabbitmq_tcp_relay \
-	  -p 15670:15670 --net rabbitmq_net -v ${CONF_DIR}:/conf \
-	  cloudamqp/websocket-tcp-relay \
-	  --upstream=tcp://rabbitmq:5672 \
-	  --bind=0.0.0.0 
-	  #--tls-cert=/conf/certs_private/basic/server_localhost/cert.pem \
-	  #--tls-key=/conf/certs_private/basic/server_localhost/key.pem
+	-p 15670:15670 --net rabbitmq_net -v ${CONF_DIR}:/conf \
+	cloudamqp/websocket-tcp-relay \
+	--upstream=tcp://rabbitmq:5672 \
+	--bind=0.0.0.0
+	#--tls-cert=/conf/certs_private/basic/server_localhost/cert.pem \
+	#--tls-key=/conf/certs_private/basic/server_localhost/key.pem 
 }
 
 deploy
