@@ -34,7 +34,10 @@ services:
         make info
         cp /conf/certs_private/basic/testca/cacert.pem /conf/certs_private
         cp /conf/certs_private/basic/server_localhost/key.pem /conf/certs_private
-        cp /conf/certs_private/basic/server_localhost/cert.pem /conf/certs_private"
+        cp /conf/certs_private/basic/server_localhost/cert.pem /conf/certs_private
+        fi
+        rabbitmq-server
+        "
 
   rabbitmq_tcp_relay:
     image: cloudamqp/websocket-tcp-relay
