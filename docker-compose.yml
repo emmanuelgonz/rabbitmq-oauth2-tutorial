@@ -70,6 +70,10 @@ services:
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
       - ./conf/keycloak/certs:/opt/keycloak/certs
+    command: >
+      start-dev --import-realm
+      --https-certificate-file=/opt/keycloak/certs/server_keycloak_certificate.pem
+      --https-certificate-key-file=/opt/keycloak/certs/server_keycloak_key.pem
 
 networks:
   rabbitmq_net:
