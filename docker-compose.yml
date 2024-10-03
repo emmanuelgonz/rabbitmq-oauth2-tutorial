@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   rabbitmq:
     image: rabbitmq:3.13.6-management
@@ -21,6 +20,7 @@ services:
       - ADVANCED=advanced.config
       - IMAGE_TAG=3.13.6-management
       - IMAGE=rabbitmq
+      # - PASSWORD=${PASSWORD:-your_default_password_here}
     command: >
       bash -c "
       if [[ -f /conf/requires-tls && ! -f /conf/certs_private ]]; then
@@ -29,7 +29,7 @@ services:
         cp -r /tls-gen/* /conf/certs_private
         cd /conf/certs_private/basic
         make CN=localhost
-        make PASSWORD=$PASSWORD
+        # make PASSWORD=$PASSWORD
         make verify
         make info
         cp /conf/certs_private/basic/testca/cacert.pem /conf/certs_private
@@ -70,10 +70,6 @@ services:
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
       - ./conf/keycloak/certs:/opt/keycloak/certs
-    command: >
-      start-dev --import-realm
-      --https-certificate-file=/opt/keycloak/certs/server_keycloak_certificate.pem
-      --https-certificate-key-file=/opt/keycloak/certs/server_keycloak_key.pem
 
 networks:
   rabbitmq_net:
