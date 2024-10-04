@@ -20,10 +20,12 @@ services:
       - ADVANCED=advanced.config
       - IMAGE_TAG=3.13.6-management
       - IMAGE=rabbitmq
-      - PASSWORD=${PASSWORD:-your_default_password_here}
+      # - PASSWORD=${PASSWORD:-your_default_password_here}
     command: >
       bash -c "
+      echo 'Starting RabbitMQ with TLS configuration...'
       if [[ -f /conf/requires-tls && ! -f /conf/certs_private ]]; then
+        echo 'TLS required and certs_private directory not found. Generating certificates...'
         mkdir -p /conf/certs_private
         git clone https://github.com/michaelklishin/tls-gen /tls-gen
         cp -r /tls-gen/* /conf/certs_private
@@ -35,9 +37,12 @@ services:
         cp /conf/certs_private/basic/testca/cacert.pem /conf/certs_private
         cp /conf/certs_private/basic/server_localhost/key.pem /conf/certs_private
         cp /conf/certs_private/basic/server_localhost/cert.pem /conf/certs_private
-        fi
-        rabbitmq-server
-        "
+      else
+        echo 'TLS not required or certs_private directory already exists.'
+      fi
+      echo 'Starting RabbitMQ server...'
+      rabbitmq-server
+      "
 
   rabbitmq_tcp_relay:
     image: cloudamqp/websocket-tcp-relay
