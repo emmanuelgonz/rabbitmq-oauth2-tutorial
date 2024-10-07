@@ -40,6 +40,9 @@ services:
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      VIRTUAL_HOST: nost.smce.nasa.gov
+      VIRTUAL_PORT: 8443
+      LETSENCRYPT_HOST: nost.smce.nasa.gov
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
       - ./certs:/etc/letsencrypt
