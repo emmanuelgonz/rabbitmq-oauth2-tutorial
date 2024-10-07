@@ -29,8 +29,8 @@ services:
       - "./acme:/etc/acme.sh"
     environment:
       DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
-    command: >
-      sh -c "trap exit TERM; while :; do chmod -R 755 /etc/nginx/certs; sleep 6h & wait $${!}; done"
+      FILES_PERMS: 644
+
   # keycloak:
   #   image: quay.io/keycloak/keycloak:20.0
   #   networks:
