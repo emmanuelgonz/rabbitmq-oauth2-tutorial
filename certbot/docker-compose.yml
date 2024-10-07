@@ -25,3 +25,5 @@ services:
     depends_on:
       - nginx-proxy
     restart: always
+    volumes_from:
+      - nginx-proxy
