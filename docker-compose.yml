@@ -1,34 +1,57 @@
 version: '3.7'
 services:
-  rabbitmq:
-    image: rabbitmq:3.13.6-management
-    networks:
-      - rabbitmq_net
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
     ports:
-      - "15672:15672"
-      - "5672:5672"
-      - "5552:5552"
-      - "15671:15671"
-      - "5671:5671"
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./conf/keycloak:/conf
-      - ./conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
-      - ./conf/keycloak/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./conf/keycloak/advanced.config:/etc/rabbitmq/advanced.config:ro
-      - ./certs:/etc/letsencrypt
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./data/certs:/etc/nginx/certs:ro
+      - ./data/vhost.d:/etc/nginx/vhost.d
+      - ./data/html:/usr/share/nginx/html
     restart: always
-
-  rabbitmq_tcp_relay:
-    image: cloudamqp/websocket-tcp-relay
-    networks:
-      - rabbitmq_net
-    ports:
-      - "15670:15670"
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: acme-companion
     volumes:
-      - ./conf/keycloak:/conf
-    command: --upstream=tcp://rabbitmq:5672 --bind=0.0.0.0
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/certs:/etc/nginx/certs:rw
+    environment:
+      DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
+    depends_on:
+      - nginx-proxy
     restart: always
-
+    volumes_from:
+      - nginx-proxy
+  # rabbitmq:
+  #   image: rabbitmq:3.13.6-management
+  #   networks:
+  #     - rabbitmq_net
+  #   ports:
+  #     - "15672:15672"
+  #     - "5672:5672"
+  #     - "5552:5552"
+  #     - "15671:15671"
+  #     - "5671:5671"
+  #   volumes:
+  #     - ./conf/keycloak:/conf
+  #     - ./conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
+  #     - ./conf/keycloak/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+  #     - ./conf/keycloak/advanced.config:/etc/rabbitmq/advanced.config:ro
+  #     - ./certs:/etc/letsencrypt
+  #   restart: always
+  # rabbitmq_tcp_relay:
+  #   image: cloudamqp/websocket-tcp-relay
+  #   networks:
+  #     - rabbitmq_net
+  #   ports:
+  #     - "15670:15670"
+  #   volumes:
+  #     - ./conf/keycloak:/conf
+  #   command: --upstream=tcp://rabbitmq:5672 --bind=0.0.0.0
+  #   restart: always
   keycloak:
     image: quay.io/keycloak/keycloak:20.0
     networks:
@@ -41,7 +64,7 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
-      - ./certs:/etc/letsencrypt
+      - ./data/certs:/etc/letsencrypt
     command: start-dev --import-realm --https-certificate-file=/etc/letsencrypt/default.crt --https-certificate-key-file=/etc/letsencrypt/default.key
     restart: always
 
