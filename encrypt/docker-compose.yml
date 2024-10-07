@@ -18,7 +18,7 @@ services:
       - localtest
     volumes:
       - ./certs:/etc/letsencrypt
-    command: certonly --webroot -w /etc/letsencrypt -d yourdomain.com --agree-tos -n --email gonzalez.mikey1@gmail.com
+    command: certonly --webroot -w /etc/letsencrypt -d nost.smce.nasa.gov --agree-tos -n --email gonzalez.mikey1@gmail.com
 
 networks:
   localtest:
