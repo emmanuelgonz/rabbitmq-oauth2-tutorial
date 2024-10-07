@@ -30,19 +30,18 @@ services:
     environment:
       DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
       FILES_PERMS: 644
-
-  # keycloak:
-  #   image: quay.io/keycloak/keycloak:20.0
-  #   networks:
-  #     - rabbitmq_net
-  #   ports:
-  #     - "8080:8080"
-  #     - "8443:8443"
-  #   environment:
-  #     KEYCLOAK_ADMIN: admin
-  #     KEYCLOAK_ADMIN_PASSWORD: admin
-  #   volumes:
-  #     - ./conf/keycloak/import:/opt/keycloak/data/import
-  #     - ./certs:/etc/letsencrypt
-  #   command: start-dev --import-realm --https-certificate-file=/etc/letsencrypt/default.crt --https-certificate-key-file=/etc/letsencrypt/default.key
-  #   restart: always
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0
+    networks:
+      - rabbitmq_net
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - ./conf/keycloak/import:/opt/keycloak/data/import
+      - ./certs:/etc/letsencrypt
+    command: start-dev --import-realm --https-certificate-file=/etc/letsencrypt/default.crt --https-certificate-key-file=/etc/letsencrypt/default.key
+    restart: always
