@@ -71,6 +71,12 @@ services:
       - ./certs:/etc/letsencrypt
     command: certonly --webroot -w /etc/letsencrypt -d nost.smce.nasa.gov --agree-tos -n --email emmanuelgonzalez@asu.edu
     restart: unless-stopped
+networks:
+  rabbitmq_net:
+    name: rabbitmq_net
+    # external: true
+    driver: bridge
+
 # services:
 #   rabbitmq:
 #     image: rabbitmq:3.13.6-management
