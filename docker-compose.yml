@@ -64,8 +64,8 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
-      - ./data/certs:/etc/letsencrypt
-    command: start-dev --import-realm --https-certificate-file=/etc/letsencrypt/default.crt --https-certificate-key-file=/etc/letsencrypt/default.key
+      - ./certbot/data/certs:/opt/keycloak/certs
+    command: start-dev --import-realm --https-certificate-file=/opt/keycloak/certs/default.crt --https-certificate-key-file=/opt/keycloak/certs/default.key
     restart: always
 
 networks:
