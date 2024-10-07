@@ -48,23 +48,23 @@ services:
       - ./certs:/etc/letsencrypt
     command: start --optimized --import-realm --hostname=nost.smce.nasa.gov --https-certificate-file=/etc/letsencrypt/default.crt --https-certificate-key-file=/etc/letsencrypt/default.key
     restart: always
-  rabbitmq:
-    image: rabbitmq:3.13.6-management
-    networks:
-      - rabbitmq_net
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-      - "5552:5552"
-      - "15671:15671"
-      - "5671:5671"
-    volumes:
-      - ./conf/keycloak:/conf
-      - ./conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
-      - ./conf/keycloak/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
-      - ./conf/keycloak/advanced.config:/etc/rabbitmq/advanced.config:ro
-      - ./certs:/etc/letsencrypt
-    restart: always
+  # rabbitmq:
+  #   image: rabbitmq:3.13.6-management
+  #   networks:
+  #     - rabbitmq_net
+  #   ports:
+  #     - "15672:15672"
+  #     - "5672:5672"
+  #     - "5552:5552"
+  #     - "15671:15671"
+  #     - "5671:5671"
+  #   volumes:
+  #     - ./conf/keycloak:/conf
+  #     - ./conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
+  #     - ./conf/keycloak/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+  #     - ./conf/keycloak/advanced.config:/etc/rabbitmq/advanced.config:ro
+  #     - ./certs:/etc/letsencrypt
+  #   restart: always
   # rabbitmq_tcp_relay:
   #   image: cloudamqp/websocket-tcp-relay
   #   networks:
