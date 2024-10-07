@@ -46,5 +46,5 @@ services:
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
       - ./certs:/etc/letsencrypt
-    command: start --optimized --import-realm --https-certificate-file=/etc/letsencrypt/default.crt --https-certificate-key-file=/etc/letsencrypt/default.key
+    command: start --optimized --import-realm --hostname=nost.smce.nasa.gov --https-certificate-file=/etc/letsencrypt/default.crt --https-certificate-key-file=/etc/letsencrypt/default.key
     restart: always
