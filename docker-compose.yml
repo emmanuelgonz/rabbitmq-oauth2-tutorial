@@ -42,11 +42,10 @@ services:
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
       - ./certs:/etc/letsencrypt
-    command: start-dev --import-realm --https-certificate-file=/etc/letsencrypt/live/nost.smce.nasa.gov/fullchain.pem --https-certificate-key-file=/etc/letsencrypt/live/nost.smce.nasa.gov/privkey.pem
+    command: start-dev --import-realm --https-certificate-file=/etc/letsencrypt/default.crt --https-certificate-key-file=/etc/letsencrypt/default.key
     restart: always
 
 networks:
   rabbitmq_net:
     name: rabbitmq_net
-    # external: true
     driver: bridge
