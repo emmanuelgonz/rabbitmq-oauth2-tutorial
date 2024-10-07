@@ -1,8 +1,13 @@
+version: '3.7'
+
+networks:
+  rabbitmq_net:
+    name: rabbitmq_net
+    external: true
+
 services:
   rabbitmq:
     image: rabbitmq:3.13.6-management
-    container_name: rabbitmq
-    restart: always
     networks:
       - rabbitmq_net
     ports:
@@ -12,76 +17,144 @@ services:
       - "15671:15671"
       - "5671:5671"
     volumes:
-      - ./conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
       - ./conf/keycloak:/conf
-      - ./conf/keycloak/certs:/conf/certs_private
-    environment:
-      - MODE=keycloak
-      - ADVANCED=advanced.config
-      - IMAGE_TAG=3.13.6-management
-      - IMAGE=rabbitmq
-      # - PASSWORD=${PASSWORD:-your_default_password_here}
-    command: >
-      bash -c "
-      echo 'Starting RabbitMQ with TLS configuration...'
-      if [[ -f /conf/requires-tls && ! -f /conf/certs_private ]]; then
-        echo 'TLS required and certs_private directory not found. Generating certificates...'
-        mkdir -p /conf/certs_private
-        git clone https://github.com/michaelklishin/tls-gen /tls-gen
-        cp -r /tls-gen/* /conf/certs_private
-        cd /conf/certs_private/basic
-        make CN=localhost
-        make PASSWORD=$PASSWORD
-        make verify
-        make info
-        cp /conf/certs_private/basic/testca/cacert.pem /conf/certs_private
-        cp /conf/certs_private/basic/server_localhost/key.pem /conf/certs_private
-        cp /conf/certs_private/basic/server_localhost/cert.pem /conf/certs_private
-      else
-        echo 'TLS not required or certs_private directory already exists.'
-      fi
-      echo 'Starting RabbitMQ server...'
-      rabbitmq-server
-      "
+      - ./conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - ./conf/keycloak/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./conf/keycloak/advanced.config:/etc/rabbitmq/advanced.config:ro
+      - ./certs:/etc/letsencrypt
+    restart: always
 
   rabbitmq_tcp_relay:
     image: cloudamqp/websocket-tcp-relay
-    container_name: rabbitmq_tcp_relay
-    restart: always
     networks:
       - rabbitmq_net
     ports:
       - "15670:15670"
     volumes:
       - ./conf/keycloak:/conf
-    command: >
-      --upstream=tcp://rabbitmq:5672
-      --bind=0.0.0.0
-      #--tls-cert=/conf/certs_private/basic/server_localhost/cert.pem
-      #--tls-key=/conf/certs_private/basic/server_localhost/key.pem
+    command: --upstream=tcp://rabbitmq:5672 --bind=0.0.0.0
+    restart: always
 
   keycloak:
     image: quay.io/keycloak/keycloak:20.0
-    container_name: keycloak
-    restart: always
     networks:
       - rabbitmq_net
     ports:
       - "8080:8080"
       - "8443:8443"
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
-      - ./conf/keycloak/certs:/opt/keycloak/certs
-    command: >
-      start-dev --import-realm
-      --https-certificate-file=/opt/keycloak/certs/server_keycloak_certificate.pem
-      --https-certificate-key-file=/opt/keycloak/certs/server_keycloak_key.pem
+      - ./certs:/etc/letsencrypt
+    command: start-dev --import-realm --https-certificate-file=/etc/letsencrypt/live/nost.smce.nasa.gov/fullchain.pem --https-certificate-key-file=/etc/letsencrypt/live/nost.smce.nasa.gov/privkey.pem
+    restart: always
 
-networks:
-  rabbitmq_net:
-    name: rabbitmq_net
-    # external: true
-    driver: bridge
+  web:
+    image: nginx
+    networks:
+      - rabbitmq_net
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certs:/etc/letsencrypt
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot
+    networks:
+      - rabbitmq_net
+    volumes:
+      - ./certs:/etc/letsencrypt
+    command: certonly --webroot -w /etc/letsencrypt -d nost.smce.nasa.gov --agree-tos -n --email emmanuelgonzalez@asu.edu
+    restart: unless-stopped
+# services:
+#   rabbitmq:
+#     image: rabbitmq:3.13.6-management
+#     container_name: rabbitmq
+#     restart: always
+#     networks:
+#       - rabbitmq_net
+#     ports:
+#       - "15672:15672"
+#       - "5672:5672"
+#       - "5552:5552"
+#       - "15671:15671"
+#       - "5671:5671"
+#     volumes:
+#       - ./conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
+#       - ./conf/keycloak:/conf
+#       - ./conf/keycloak/certs:/conf/certs_private
+#     environment:
+#       - MODE=keycloak
+#       - ADVANCED=advanced.config
+#       - IMAGE_TAG=3.13.6-management
+#       - IMAGE=rabbitmq
+#       # - PASSWORD=${PASSWORD:-your_default_password_here}
+#     command: >
+#       bash -c "
+#       echo 'Starting RabbitMQ with TLS configuration...'
+#       if [[ -f /conf/requires-tls && ! -f /conf/certs_private ]]; then
+#         echo 'TLS required and certs_private directory not found. Generating certificates...'
+#         mkdir -p /conf/certs_private
+#         git clone https://github.com/michaelklishin/tls-gen /tls-gen
+#         cp -r /tls-gen/* /conf/certs_private
+#         cd /conf/certs_private/basic
+#         make CN=localhost
+#         make PASSWORD=$PASSWORD
+#         make verify
+#         make info
+#         cp /conf/certs_private/basic/testca/cacert.pem /conf/certs_private
+#         cp /conf/certs_private/basic/server_localhost/key.pem /conf/certs_private
+#         cp /conf/certs_private/basic/server_localhost/cert.pem /conf/certs_private
+#       else
+#         echo 'TLS not required or certs_private directory already exists.'
+#       fi
+#       echo 'Starting RabbitMQ server...'
+#       rabbitmq-server
+#       "
+
+#   rabbitmq_tcp_relay:
+#     image: cloudamqp/websocket-tcp-relay
+#     container_name: rabbitmq_tcp_relay
+#     restart: always
+#     networks:
+#       - rabbitmq_net
+#     ports:
+#       - "15670:15670"
+#     volumes:
+#       - ./conf/keycloak:/conf
+#     command: >
+#       --upstream=tcp://rabbitmq:5672
+#       --bind=0.0.0.0
+#       #--tls-cert=/conf/certs_private/basic/server_localhost/cert.pem
+#       #--tls-key=/conf/certs_private/basic/server_localhost/key.pem
+
+#   keycloak:
+#     image: quay.io/keycloak/keycloak:20.0
+#     container_name: keycloak
+#     restart: always
+#     networks:
+#       - rabbitmq_net
+#     ports:
+#       - "8080:8080"
+#       - "8443:8443"
+#     environment:
+#       - KEYCLOAK_ADMIN=admin
+#       - KEYCLOAK_ADMIN_PASSWORD=admin
+#     volumes:
+#       - ./conf/keycloak/import:/opt/keycloak/data/import
+#       - ./conf/keycloak/certs:/opt/keycloak/certs
+#     command: >
+#       start-dev --import-realm
+#       --https-certificate-file=/opt/keycloak/certs/server_keycloak_certificate.pem
+#       --https-certificate-key-file=/opt/keycloak/certs/server_keycloak_key.pem
+
+# networks:
+#   rabbitmq_net:
+#     name: rabbitmq_net
+#     # external: true
+#     driver: bridge
