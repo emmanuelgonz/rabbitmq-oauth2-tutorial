@@ -59,7 +59,7 @@ services:
       - "15671:15671"
       - "5671:5671"
     volumes:
-      - ./conf/keycloak:/conf
+      # - ./conf/keycloak:/conf
       - ./conf/enabled_plugins:/etc/rabbitmq/enabled_plugins
       - ./conf/keycloak/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
       - ./conf/keycloak/advanced.config:/etc/rabbitmq/advanced.config:ro
