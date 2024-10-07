@@ -1,18 +1,27 @@
 version: '3'
 
 services:
-  webserver:
-    image: nginx:latest
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    container_name: nginx-proxy
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf:/etc/nginx/conf.d:ro
-      - ./certbot/www:/var/www/certbot:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./data/certs:/etc/nginx/certs:ro
+      - ./data/vhost.d:/etc/nginx/vhost.d
+      - ./data/html:/usr/share/nginx/html
     restart: always
 
-  certbot:
-    image: certbot/certbot:latest
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: acme-companion
     volumes:
-      - ./certbot/www:/var/www/certbot:rw
-      - ./certbot/conf:/etc/letsencrypt:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/certs:/etc/nginx/certs:rw
+    environment:
+      DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
+    depends_on:
+      - nginx-proxy
+    restart: always
