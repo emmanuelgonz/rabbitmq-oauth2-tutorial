@@ -1,30 +1,30 @@
 version: '3.7'
 services:
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy
-    container_name: nginx-proxy
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./data/certs:/etc/nginx/certs:ro
-      - ./data/vhost.d:/etc/nginx/vhost.d
-      - ./data/html:/usr/share/nginx/html
-    restart: always
-  acme-companion:
-    image: nginxproxy/acme-companion
-    container_name: acme-companion
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./data/certs:/etc/nginx/certs:rw
-    environment:
-      DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
-    depends_on:
-      - nginx-proxy
-    restart: always
-    volumes_from:
-      - nginx-proxy
+  # nginx-proxy:
+  #   image: nginxproxy/nginx-proxy
+  #   container_name: nginx-proxy
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
+  #     - ./data/certs:/etc/nginx/certs:ro
+  #     - ./data/vhost.d:/etc/nginx/vhost.d
+  #     - ./data/html:/usr/share/nginx/html
+  #   restart: always
+  # acme-companion:
+  #   image: nginxproxy/acme-companion
+  #   container_name: acme-companion
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - ./data/certs:/etc/nginx/certs:rw
+  #   environment:
+  #     DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
+  #   depends_on:
+  #     - nginx-proxy
+  #   restart: always
+  #   volumes_from:
+  #     - nginx-proxy
   # rabbitmq:
   #   image: rabbitmq:3.13.6-management
   #   networks:
