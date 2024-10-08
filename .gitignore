@@ -17,3 +17,8 @@ master-*.zip
 target/
 .mvn
 *.iml
+conf/keycloak/import/*
+acme/
+certs/
+html/
+vhost/
