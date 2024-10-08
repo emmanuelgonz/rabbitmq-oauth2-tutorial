@@ -17,3 +17,4 @@ master-*.zip
 target/
 .mvn
 *.iml
+conf/keycloak/import/*
