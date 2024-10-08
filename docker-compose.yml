@@ -32,6 +32,7 @@ services:
       FILES_PERMS: 644
   keycloak:
     image: quay.io/keycloak/keycloak:20.0
+    container_name: "keycloak"
     networks:
       - rabbitmq_net
     ports:
@@ -50,6 +51,7 @@ services:
     restart: always
   rabbitmq:
     image: rabbitmq:3.13.6-management
+    container_name: "rabbitmq"
     networks:
       - rabbitmq_net
     ports:
@@ -67,6 +69,7 @@ services:
     restart: always
   rabbitmq_tcp_relay:
     image: cloudamqp/websocket-tcp-relay
+    container_name: "rabbitmq_tcp_relay"
     networks:
       - rabbitmq_net
     ports:
