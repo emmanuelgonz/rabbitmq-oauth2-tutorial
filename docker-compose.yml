@@ -30,6 +30,7 @@ services:
     environment:
       DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
       FILES_PERMS: 644
+        #ACME_CA_URI: https://acme-staging-v02.api.letsencrypt.org/directory
   keycloak:
     image: quay.io/keycloak/keycloak:20.0
     container_name: "keycloak"
@@ -44,6 +45,7 @@ services:
       VIRTUAL_HOST: nost.smce.nasa.gov
       VIRTUAL_PORT: 8443
       LETSENCRYPT_HOST: nost.smce.nasa.gov
+        #LETSENCRYPT_TEST: true
     volumes:
       - ./conf/keycloak/import:/opt/keycloak/data/import
       - ./certs:/certs
@@ -76,5 +78,6 @@ services:
       - "15670:15670"
     volumes:
       - ./conf/keycloak:/conf
+      - ./certs:/certs
     command: --upstream=tcp://rabbitmq:5672 --bind=0.0.0.0
     restart: always
