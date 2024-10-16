@@ -79,5 +79,5 @@ services:
     volumes:
       - ./conf/keycloak:/conf
       - ./certs:/certs
-    command: --upstream=tcp://rabbitmq:5672 --bind=0.0.0.0
+    command: --upstream=tcp://rabbitmq:5672 --bind=0.0.0.0 --tls-cert=/certs/nost.smce.nasa.gov/fullchain.pem --tls-key=/certs/nost.smce.nasa.gov/key.pem #--upstream=tcp://rabbitmq:5672 --bind=0.0.0.0
     restart: always
