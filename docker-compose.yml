@@ -14,7 +14,7 @@ services:
     volumes:
       - "./certs:/etc/nginx/certs"
       - "./vhost:/etc/nginx/vhost.d"
-      - "./html:/usr/share/nginx/html"
+      - "./html:/usr/share/nginx/html:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
