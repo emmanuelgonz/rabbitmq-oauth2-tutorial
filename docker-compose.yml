@@ -14,11 +14,10 @@ services:
     volumes:
       - "./certs:/etc/nginx/certs"
       - "./vhost:/etc/nginx/vhost.d"
-      # - "./vhost/nginx.conf:/etc/nginx/conf.d/default.conf:ro"
       - "./html:/usr/share/nginx/html"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
-    # environment:
-    #   - DEFAULT_HOST=nost.smce.nasa.gov
+    environment:
+      - DEFAULT_HOST=nost.smce.nasa.gov
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: "acme-companion"
