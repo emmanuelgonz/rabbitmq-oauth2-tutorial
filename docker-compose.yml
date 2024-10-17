@@ -12,11 +12,11 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./certs:/certs
-      # - ./certs:/etc/nginx/certs
-      - ./vhost:/etc/nginx/vhost.d
-      - ./html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      # - ./certs:/certs
+      - "./certs:/etc/nginx/certs"
+      - "./vhost:/etc/nginx/vhost.d"
+      - "./html:/usr/share/nginx/html"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
     environment:
       - DEFAULT_HOST=nost.smce.nasa.gov
       # - VIRTUAL_HOST: nost.smce.nasa.gov
@@ -34,6 +34,7 @@ services:
       - "./acme:/etc/acme.sh"
     environment:
       DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
+      ACME_CHALLENGE: DNS-01
       FILES_PERMS: 644
         #ACME_CA_URI: https://acme-staging-v02.api.letsencrypt.org/directory
   keycloak:
