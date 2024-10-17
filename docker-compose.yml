@@ -17,7 +17,7 @@ services:
       - "./html:/usr/share/nginx/html"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
     environment:
-      - DEFAULT_HOST: nost.smce.nasa.gov
+      - DEFAULT_HOST=nost.smce.nasa.gov
       # - VIRTUAL_HOST: nost.smce.nasa.gov
       # - LETSENCRYPT_HOST: nost.smce.nasa.gov
   nginx-proxy-acme:
