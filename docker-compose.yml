@@ -33,7 +33,7 @@ services:
       - "./acme:/etc/acme.sh"
     environment:
       DEFAULT_EMAIL: emmanuelgonzalez@asu.edu
-      ACME_CHALLENGE: DNS-01
+      # ACME_CHALLENGE: DNS-01
       FILES_PERMS: 644
         #ACME_CA_URI: https://acme-staging-v02.api.letsencrypt.org/directory
   keycloak:
