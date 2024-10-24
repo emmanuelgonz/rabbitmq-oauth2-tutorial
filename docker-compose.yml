@@ -105,3 +105,8 @@ services:
   #   volumes:
   #     - ".:/usr/src/app"
   #     - "/usr/src/app/node_modules"
+  #   environment:
+  #     - VIRTUAL_HOST=nost.smce.nasa.gov
+  #     - VIRTUAL_PORT=3000
+  #     - LETSENCRYPT_HOST=nost.smce.nasa.gov
+  #   restart: always
