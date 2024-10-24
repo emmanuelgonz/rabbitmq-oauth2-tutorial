@@ -19,6 +19,8 @@ services:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
     environment:
       - DEFAULT_HOST=nost.smce.nasa.gov
+      - VIRTUAL_HOST=nost.smce.nasa.gov
+      - VIRTUAL_PORT=80
       # - VIRTUAL_HOST: nost.smce.nasa.gov
       # - LETSENCRYPT_HOST: nost.smce.nasa.gov
   nginx-proxy-acme:
@@ -87,21 +89,21 @@ services:
       - ./certs:/certs
     command: --upstream=tcp://rabbitmq:5672 --bind=0.0.0.0 --tls-cert=/certs/nost.smce.nasa.gov/fullchain.pem --tls-key=/certs/nost.smce.nasa.gov/key.pem #--upstream=tcp://rabbitmq:5672 --bind=0.0.0.0
     restart: always
-  html-server:
-    image: nginx:alpine
-    container_name: "html-server"
-    volumes:
-      - "./html:/usr/share/nginx/html"
-      - "./certs:/etc/nginx/certs"
-    environment:
-      - VIRTUAL_HOST=nost.smce.nasa.gov
-      - VIRTUAL_PORT=80
-    restart: always
-  nost-sos:
-    image: emmanuelgonzalez/nost_sos_visualization:latest
-    container_name: "nost-sos"
-    ports:
-      - "3000:3000"
-    volumes:
-      - ".:/usr/src/app"
-      - "/usr/src/app/node_modules"
+  # html-server:
+  #   image: nginx:alpine
+  #   container_name: "html-server"
+  #   volumes:
+  #     - "./html:/usr/share/nginx/html"
+  #     - "./certs:/etc/nginx/certs"
+  #   environment:
+  #     - VIRTUAL_HOST=nost.smce.nasa.gov
+  #     - VIRTUAL_PORT=80
+  #   restart: always
+  # nost-sos:
+  #   image: emmanuelgonzalez/nost_sos_visualization:latest
+  #   container_name: "nost-sos"
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - ".:/usr/src/app"
+  #     - "/usr/src/app/node_modules"
