@@ -1,10 +1,8 @@
 version: '3'
-
 networks:
   rabbitmq_net:
     name: rabbitmq_net
     driver: bridge
-
 services:
   nginx-proxy:
     image: nginxproxy/nginx-proxy
@@ -21,11 +19,8 @@ services:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
     environment:
       - DEFAULT_HOST=nost.smce.nasa.gov
-      - VIRTUAL_HOST=nost.smce.nasa.gov
-      - VIRTUAL_PORT=80
       # - VIRTUAL_HOST: nost.smce.nasa.gov
       # - LETSENCRYPT_HOST: nost.smce.nasa.gov
-
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: "acme-companion"
@@ -42,7 +37,6 @@ services:
       ACME_CHALLENGE: DNS-01
       FILES_PERMS: 644
         #ACME_CA_URI: https://acme-staging-v02.api.letsencrypt.org/directory
-
   keycloak:
     image: quay.io/keycloak/keycloak:20.0
     container_name: "keycloak"
@@ -63,7 +57,6 @@ services:
       - ./certs:/certs
     command: start --optimized --import-realm --hostname=nost.smce.nasa.gov --https-certificate-file=/certs/nost.smce.nasa.gov/cert.pem --https-certificate-key-file=/certs/nost.smce.nasa.gov/key.pem
     restart: always
-
   rabbitmq:
     image: rabbitmq:3.13.6-management
     container_name: "rabbitmq"
@@ -82,7 +75,6 @@ services:
       - ./conf/keycloak/advanced.config:/etc/rabbitmq/advanced.config:ro
       - ./certs:/certs
     restart: always
-
   rabbitmq_tcp_relay:
     image: cloudamqp/websocket-tcp-relay
     container_name: "rabbitmq_tcp_relay"
@@ -95,7 +87,6 @@ services:
       - ./certs:/certs
     command: --upstream=tcp://rabbitmq:5672 --bind=0.0.0.0 --tls-cert=/certs/nost.smce.nasa.gov/fullchain.pem --tls-key=/certs/nost.smce.nasa.gov/key.pem #--upstream=tcp://rabbitmq:5672 --bind=0.0.0.0
     restart: always
-
   html-server:
     image: nginx:alpine
     container_name: "html-server"
@@ -106,7 +97,6 @@ services:
       - VIRTUAL_HOST=nost.smce.nasa.gov
       - VIRTUAL_PORT=80
     restart: always
-
   # nost-sos:
   #   image: emmanuelgonzalez/nost_sos_visualization:latest
   #   container_name: "nost-sos"
@@ -115,8 +105,3 @@ services:
   #   volumes:
   #     - ".:/usr/src/app"
   #     - "/usr/src/app/node_modules"
-  #   environment:
-  #     - VIRTUAL_HOST=nost.smce.nasa.gov
-  #     - VIRTUAL_PORT=3000
-  #     - LETSENCRYPT_HOST=nost.smce.nasa.gov
-  #   restart: always
