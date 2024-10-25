@@ -96,16 +96,14 @@ services:
       - VIRTUAL_HOST=nost.smce.nasa.gov
       - VIRTUAL_PORT=80
     restart: always
-  # nost-sos:
-  #   image: emmanuelgonzalez/nost_sos_visualization:latest
-  #   container_name: "nost-sos"
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - ".:/usr/src/app"
-  #     - "/usr/src/app/node_modules"
-  #   environment:
-  #     - VIRTUAL_HOST=nost.smce.nasa.gov
-  #     - VIRTUAL_PORT=3000
-  #     - LETSENCRYPT_HOST=nost.smce.nasa.gov
-  #   restart: always
+  nost-sos:
+    image: emmanuelgonzalez/nost_sos_visualization:latest
+    container_name: "nost-sos"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ".env:/usr/src/app/.env"
+    environment:
+      - VIRTUAL_HOST=nost.smce.nasa.gov
+      - VIRTUAL_PORT=3000
+    restart: always
