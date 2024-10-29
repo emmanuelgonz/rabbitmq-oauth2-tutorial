@@ -103,7 +103,7 @@ services:
       - "3000:3000"
     volumes:
       - ".env:/usr/src/app/.env"
-    environment:
-      - VIRTUAL_HOST=nost.smce.nasa.gov
-      - VIRTUAL_PORT=3000
+    # environment:
+    #   - VIRTUAL_HOST=nost.smce.nasa.gov
+    #   - VIRTUAL_PORT=3000
     restart: always
