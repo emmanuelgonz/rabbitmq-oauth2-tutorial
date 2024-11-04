@@ -17,6 +17,8 @@ services:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
     environment:
       - DEFAULT_HOST=nost.smce.nasa.gov
+      - VIRTUAL_HOST=nost.smce.nasa.gov
+      - VIRTUAL_PORT=3000
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: "acme-companion"
