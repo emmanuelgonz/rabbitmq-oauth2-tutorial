@@ -15,8 +15,8 @@ services:
       - "./vhost:/etc/nginx/vhost.d"
       - "./html:/usr/share/nginx/html"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
-    # environment:
-    #   - DEFAULT_HOST=nost.smce.nasa.gov
+    environment:
+      - DEFAULT_HOST=nost.smce.nasa.gov
     #   - VIRTUAL_HOST=nost.smce.nasa.gov
     #   - VIRTUAL_PORT=3000
   nginx-proxy-acme:
