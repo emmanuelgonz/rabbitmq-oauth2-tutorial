@@ -92,7 +92,7 @@ services:
       - ".env:/usr/src/app/.env"
     environment:
       - VIRTUAL_HOST=nost.smce.nasa.gov
-      # - VIRTUAL_PORT=3000
-      - VIRTUAL_PATH=/nost-sos
-      # - LETSENCRYPT_HOST=nost.smce.nasa.gov
+      - LETSENCRYPT_HOST=nost.smce.nasa.gov
+      - VIRTUAL_PORT=3000
+      # - VIRTUAL_PATH=/nost-sos
     restart: always
