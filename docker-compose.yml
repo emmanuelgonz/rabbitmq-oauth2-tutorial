@@ -15,11 +15,11 @@ services:
       - "./vhost:/etc/nginx/vhost.d"
       - "./html:/usr/share/nginx/html"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
-      # - "./nginx.conf:/etc/nginx/nginx.conf:ro"  # Mount custom nginx.conf
     environment:
       - DEFAULT_HOST=nost.smce.nasa.gov
-      # - VIRTUAL_HOST=nost.smce.nasa.gov
-      # - VIRTUAL_PORT=3000
+      - VIRTUAL_HOST=nost.smce.nasa.gov
+      - LETSENCRYPT_HOST=nost.smce.nasa.gov
+      - VIRTUAL_PORT=3000
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: "acme-companion"
@@ -94,5 +94,4 @@ services:
       - VIRTUAL_HOST=nost.smce.nasa.gov
       - LETSENCRYPT_HOST=nost.smce.nasa.gov
       - VIRTUAL_PORT=3000
-      # - VIRTUAL_PATH=/nost-sos
     restart: always
