@@ -10,6 +10,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "3000:3000" # Expose port 3000 directly
     volumes:
       - "./certs:/etc/nginx/certs"
       - "./vhost:/etc/nginx/vhost.d"
@@ -85,8 +86,8 @@ services:
   nost-sos:
     image: emmanuelgonzalez/nost_sos_visualization:latest
     container_name: "nost-sos"
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     volumes:
       - ".env:/usr/src/app/.env"
     environment:
