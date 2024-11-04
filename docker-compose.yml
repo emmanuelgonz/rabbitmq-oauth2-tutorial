@@ -92,6 +92,6 @@ services:
     environment:
       - VIRTUAL_HOST=nost.smce.nasa.gov
       - VIRTUAL_PORT=3000
-      - VIRTUAL_PATH=/sos
+      # - VIRTUAL_PATH=/sos
       - LETSENCRYPT_HOST=nost.smce.nasa.gov
     restart: always
